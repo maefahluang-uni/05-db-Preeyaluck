@@ -27,30 +27,50 @@ public class UserController {
     public ResponseEntity<String> registerUser(@RequestBody User user) {
 
         //TODO: check if user with the username exists
+        if(repo.findByUsername(user.getUsername()) != null){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
+        }
        
         //TODO: save the user
+        repo.save(user);
 
         //TODO: remove below and return proper status
-        return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        //return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> list() {
         
         //TODO: remove below and return proper result
-        return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        //return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        List<User> users = repo.findAll();
+        return ResponseEntity.ok(users);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         
         //TODO: check if user with the id exists
+        if (!repo.existsById(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
        
         //TODO: delete the user
+        repo.deleteById(id);
     
         //TODO: remove below and return proper status
-        return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        //return new ResponseEntity<>( HttpStatus.NOT_IMPLEMENTED);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
+    /*@GetMapping("/{username}")
+    public ResponseEntity<User> getUser(@PathVariable String username) {
+        User user = repo.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(user);
+    }*/
 
 }
